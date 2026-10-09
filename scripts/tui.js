@@ -4,6 +4,12 @@ import { emitKeypressEvents } from 'node:readline';
 import { Controller } from '../src/controller.js';
 import { renderFrame } from '../src/tui-render.js';
 
+if (process.argv.includes('--live')) {
+  process.argv = [process.argv[0], process.argv[1], ...process.argv.slice(2).filter(arg => arg !== '--live')];
+  const { main } = await import('./live.js');
+  try { await main(); } catch (error) { console.error(error.message); process.exitCode = 1; }
+} else {
+
 if (!process.stdin.isTTY || !process.stdout.isTTY) {
   console.error('Codex TUI requires an interactive terminal (TTY). Open CMD / PowerShell / Windows Terminal or a desktop terminal, then run: node scripts/tui.js');
   process.exitCode = 1;
@@ -68,4 +74,5 @@ if (!process.stdin.isTTY || !process.stdout.isTTY) {
   controller.store.on('change', draw);
   timer = setInterval(draw, 120);
   void play('success');
+}
 }

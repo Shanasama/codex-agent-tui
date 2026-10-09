@@ -1,0 +1,11 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Title="Codex Agent Tree / Workflow" Width="840" Height="740" MinWidth="560" MinHeight="480" ResizeMode="CanResizeWithGrip"
+ WindowStartupLocation="CenterScreen" Background="#1A1D24" Foreground="#D3D6E0" FontFamily="Consolas" UseLayoutRounding="True">
+ <Grid x:Name="Root" Margin="8" Background="#1A1D24">
+  <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="20"/></Grid.RowDefinitions>
+  <Viewbox Grid.Row="0" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center">
+   <Canvas x:Name="TerminalCanvas" Width="1000" Height="792" Background="#1A1D24" ClipToBounds="True"/>
+  </Viewbox>
+  <TextBlock x:Name="WindowHint" Grid.Row="1" FontSize="11" Foreground="#979BA8" Text="Resize to zoom / Closing this window does not stop the task" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+ </Grid>
+</Window>

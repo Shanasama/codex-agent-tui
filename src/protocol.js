@@ -3,17 +3,17 @@ import { spawn } from 'node:child_process';
 import { isolatedEnv, WORKSPACE, CODEX_HOME, codexCommand, assertSafePath } from './runtime.js';
 
 // Backend-only allowlist. There is no HTTP JSON-RPC proxy.
-const ALLOWED = new Set(['initialize', 'model/list', 'account/read', 'thread/start', 'turn/start', 'turn/interrupt']);
+const ALLOWED = new Set(['initialize', 'model/list', 'account/read', 'thread/start', 'turn/start', 'turn/interrupt', 'command/exec']);
 export class RpcClient extends EventEmitter {
-  constructor({ command, args, cwd = WORKSPACE, env, timeoutMs = 20000 } = {}) {
+  constructor({ command, args, cwd = WORKSPACE, env, timeoutMs = 20000, runtimeHome = CODEX_HOME, allowCommandExec = false } = {}) {
     super(); this.command = command; this.args = args; this.cwd = cwd;
-    this.env = env; this.timeoutMs = timeoutMs; this.nextId = 1;
+    this.env = env; this.runtimeHome = runtimeHome; this.allowCommandExec = allowCommandExec; this.timeoutMs = timeoutMs; this.nextId = 1;
     this.pending = new Map(); this.buffer = ''; this.child = null;
   }
   async start() {
     if (this.child) throw new Error('App-server already running');
     await assertSafePath(this.cwd, true);
-    await assertSafePath(CODEX_HOME, true);
+    await assertSafePath(this.runtimeHome, true);
     const command = this.command || await codexCommand();
     this.child = spawn(command, this.args || ['app-server', '--listen', 'stdio://'], {
       cwd: this.cwd, env: this.env || isolatedEnv(), stdio: ['pipe', 'pipe', 'pipe'],
@@ -60,7 +60,7 @@ export class RpcClient extends EventEmitter {
     this.child.stdin.write(JSON.stringify(message) + '\n');
   }
   request(method, params = {}) {
-    if (!ALLOWED.has(method)) return Promise.reject(new Error(`RPC method not allowed: ${method}`));
+    if (!ALLOWED.has(method) || (method === 'command/exec' && !this.allowCommandExec)) return Promise.reject(new Error(`RPC method not allowed: ${method}`));
     const id = this.nextId++;
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => { this.pending.delete(id); reject(new Error(`RPC timed out: ${method}`)); }, this.timeoutMs);

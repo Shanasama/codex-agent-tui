@@ -1,0 +1,7 @@
+{
+  "name": "jev-workflow",
+  "version": "0.2.1",
+  "description": "Jev task routing and workflow status inside a continuous Codex CLI conversation.",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}

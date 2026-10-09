@@ -20,7 +20,7 @@ test('child environment excludes host credentials and redirects all state', () =
 });
 test('runtime path checks reject outside paths and symlinks', async () => {
   await assert.rejects(assertSafePath('/tmp/outside'), /outside/);
-  const link = path.join(RUNTIME, 'fixture-link'); await symlink('/tmp', link);
+  const link = path.join(RUNTIME, 'fixture-link'); await symlink(process.platform === 'win32' ? RUNTIME : '/tmp', link, process.platform === 'win32' ? 'junction' : 'dir');
   try { await assert.rejects(assertSafePath(path.join(link, 'file')), /Symlink/); } finally { await unlink(link); }
 });
 test('protocol tolerates fragmented frames, null, arrays, malformed JSON', () => {

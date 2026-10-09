@@ -116,6 +116,7 @@ export function renderDashboardFrame(state, { columns = 120, rows = 40, tick = 0
 // Reference layout studied from the user's video frames: Astra rail + Sol/Jev/
 // three-agent/review flow. Jev and the main Sol coordinator remain visual demos.
 export function renderFrame(state, options = {}) {
+  const live = options.workflowView;
   const { columns = 120, rows = 40, tick = 0, scenario = 'success', elapsed = 0, logOffset = 0, notice = '', view = 'reference', ascii = false } = options;
   const canvasW = Math.max(0, Math.min(Math.floor(Number.isFinite(columns) ? columns : 120) - 1, 200));
   const w = Math.min(canvasW, 120), offsetX = Math.floor((canvasW - w) / 2);
@@ -143,6 +144,7 @@ export function renderFrame(state, options = {}) {
     put(x, y + height - 1, glyph.bl + glyph.h.repeat(Math.max(0, width - 2)) + glyph.br, color);
   };
   const particle = (points, color, seed = 0) => {
+    if (live) return; // Live status comes from events, not decorative fixture motion.
     if (!points.length) return;
     const index = (Math.floor(tick / 2) + seed) % points.length;
     const [x, y] = points[index]; put(x, y, glyph.dot, color);
@@ -157,16 +159,16 @@ export function renderFrame(state, options = {}) {
   const jevW = Math.min(57, rightW - 2), jevX = cx - Math.floor(jevW / 2), jevY = mainY + mainH + 1, jevH = large ? 7 : 6;
   const branchY = jevY + jevH + (large ? 2 : 1), agentY = branchY + 2, agentH = large ? 7 : 5;
   const reviewY = treeBottom - 3, reviewW = Math.min(46, rightW - 2), reviewX = cx - Math.floor(reviewW / 2), mergeY = reviewY - 1;
-  const title = w >= 100 ? 'CODEX AGENT TREE  .  GPT-6.1 SOL WORKS  .  ASTRA ON CALL' : 'CODEX AGENT TREE  .  SOL + AGENTS + ASTRA';
+  const title = live ? 'CODEX AGENT TREE  .  SOL + JEV + ASTRA' : w >= 100 ? 'CODEX AGENT TREE  .  GPT-6.1 SOL WORKS  .  ASTRA ON CALL' : 'CODEX AGENT TREE  .  SOL + AGENTS + ASTRA';
   centerText(0, 1, w, title, 'white');
   horizontal(2, w - 3, 2);
-  put(3, 3, 'sol', 'cyan'); put(10, 3, 'agents', 'blue'); put(20, 3, 'DEMO JEV', 'green'); put(32, 3, 'astra', 'purple');
-  put(w - 28, 3, 'DEMO / SYNTHETIC EVENTS', 'amber');
+  put(3, 3, 'sol', 'cyan'); put(10, 3, 'agents', 'blue'); put(20, 3, live ? 'JEV API' : 'DEMO JEV', 'green'); put(32, 3, 'astra', 'purple');
+  put(w - 28, 3, live ? live.source : 'DEMO / SYNTHETIC EVENTS', 'amber', 26);
 
   // Left reference rail, with true fixture review state instead of fake token/cost counters.
   box(sideX, 5, sideW, treeBottom - 4, 'purple');
   centerText(sideX + 1, 6, sideW - 2, 'ASTRA', 'purple');
-  centerText(sideX + 1, 7, sideW - 2, 'architect / on call', 'dim');
+  centerText(sideX + 1, 7, sideW - 2, live ? 'review role / reference' : 'architect / on call', 'dim');
   const reviews = run?.reviews || [];
   const findReview = type => reviews.find(r => r.type === type);
   const reviewEvents = state.events.filter(e => e.type === 'review');
@@ -181,39 +183,40 @@ export function renderFrame(state, options = {}) {
     if (active) { for (let x = sideX + 1; x < sideX + sideW - 1; x++) grid[row][x + offsetX].bg = true; }
     if (active) particle(hpoints(sideX + sideW, (i === 0 ? mainX : i === 1 ? rightX : reviewX) - 2, row), 'purple', i * 3);
   });
-  const railLines = [ ['review at 3 gates', 'base'], ['plan, errors, final', 'dim'], ['', 'dim'], ['last fixture review:', 'dim'], [reviewEvents.at(-1)?.detail || 'waiting for events', 'purple'] ];
+  const railLines = live ? [ ['plan / '+live.plan, 'base'], ['final / '+live.review, 'dim'], ['', 'dim'], ['status source:', 'dim'], [live.reviewerModel, 'purple'] ] : [ ['review at 3 gates', 'base'], ['plan, errors, final', 'dim'], ['', 'dim'], ['last fixture review:', 'dim'], [reviewEvents.at(-1)?.detail || 'waiting for events', 'purple'] ];
   railLines.forEach(([label, color], i) => put(sideX + 2, 10 + i, label, color, sideW - 4));
   if (h >= 44) {
     put(sideX + 2, 17, 'review events', 'dim', sideW - 4); put(sideX + 2, 18, String(reviewEvents.length), 'purple');
     put(sideX + 2, 20, 'tokens / cost', 'dim'); put(sideX + 2, 21, 'not measured', 'dim');
   }
-  put(sideX + 2, treeBottom - 6, 'never edits files', 'dim', sideW - 4);
-  put(sideX + 2, treeBottom - 5, 'no real tests run', 'dim', sideW - 4);
-  put(sideX + 2, treeBottom - 4, 'DEMO ONLY', 'amber', sideW - 4);
-  put(sideX + 2, treeBottom - 3, 'NO AUTH', 'dim', sideW - 4);
+  put(sideX + 2, treeBottom - 6, live ? live.reviewerNote : 'never edits files', 'dim', sideW - 4);
+  put(sideX + 2, treeBottom - 5, live ? live.reviewerNoteDetail : 'no real tests run', 'dim', sideW - 4);
+  put(sideX + 2, treeBottom - 4, live ? 'REFERENCE ROLE' : 'DEMO ONLY', 'amber', sideW - 4);
+  put(sideX + 2, treeBottom - 3, live ? 'NO INFERRED AGENT' : 'NO AUTH', 'dim', sideW - 4);
 
   box(mainX, mainY, mainW, mainH, 'cyan');
-  centerText(mainX + 1, mainY + 1, mainW - 2, 'GPT-6.1 Sol / main', 'cyan');
-  centerText(mainX + 1, mainY + 2, mainW - 2, 'REFERENCE SCHEMATIC / DEMO', 'base');
-  centerText(mainX + 1, mainY + 3, mainW - 2, 'patch proposals, no edits', 'dim');
-  if (large) centerText(mainX + 1, mainY + 4, mainW - 2, 'effort / cost: not measured', 'dim');
+  centerText(mainX + 1, mainY + 1, mainW - 2, live ? 'Sol / main role' : 'GPT-6.1 Sol / main', 'cyan');
+  centerText(mainX + 1, mainY + 2, mainW - 2, live ? live.workerModel : 'REFERENCE SCHEMATIC / DEMO', 'base');
+  centerText(mainX + 1, mainY + 3, mainW - 2, live ? live.workerAction+' / '+live.workerStatus : 'patch proposals, no edits', 'dim');
+  if (large) centerText(mainX + 1, mainY + 4, mainW - 2, live ? 'role label / CLI source' : 'effort / cost: not measured', 'dim');
   vertical(cx, mainY + mainH, jevY - 1); particle(vpoints(cx, mainY + mainH, jevY - 1), 'cyan');
 
   box(jevX, jevY, jevW, jevH, 'green');
-  put(jevX + 2, jevY + 1, jevW >= 52 ? 'JEV / VISUAL DEMO' : 'DEMO JEV / NOT CONNECTED', 'green', jevW - 4);
-  if (jevW >= 52) put(jevX + jevW - 20, jevY + 1, 'NOT CONNECTED', 'amber', 17);
+  put(jevX + 2, jevY + 1, live ? 'JEV / '+live.jevModel : jevW >= 52 ? 'JEV / VISUAL DEMO' : 'DEMO JEV / NOT CONNECTED', 'green', jevW - 4);
+  if (jevW >= 52 && !live) put(jevX + jevW - 20, jevY + 1, 'NOT CONNECTED', 'amber', 17);
   const gateRows = 3;
-  ['which file', 'which tool', 'retry / stop'].slice(0, gateRows).forEach((name, i) => {
+  (live ? ['execute', 'plan review', 'clarify'] : ['which file', 'which tool', 'retry / stop']).slice(0, gateRows).forEach((name, i) => {
     const barWidth = Math.max(5, Math.min(12, jevW - 33));
     // These are intentionally static illustration levels, not probabilities or real fork data.
-    const filled = [barWidth - 1, Math.floor(barWidth * .5), barWidth - 1][i];
+    const probability = live?.probabilities?.[i]?.value;
+    const filled = live ? Number.isFinite(probability) ? Math.round(Math.max(0,Math.min(1,probability))*barWidth) : 0 : [barWidth - 1, Math.floor(barWidth * .5), barWidth - 1][i];
     put(jevX + 2, jevY + 2 + i, name, 'base', 14);
     put(jevX + 17, jevY + 2 + i, '[' + '#'.repeat(filled) + '.'.repeat(barWidth - filled) + ']', i === 1 ? 'cyan' : 'green');
-    put(jevX + 20 + barWidth, jevY + 2 + i, 'sample', 'dim', jevW - 22 - barWidth);
+    put(jevX + 20 + barWidth, jevY + 2 + i, live ? Number.isFinite(probability) ? `${Math.round(probability*100)}%` : '--' : 'sample', 'dim', jevW - 22 - barWidth);
   });
-  if (large) put(jevX + 2, jevY + jevH - 2, 'actual routing: controller / sample bars', 'dim', jevW - 4);
+  if (large) put(jevX + 2, jevY + jevH - 2, live ? live.decision : 'actual routing: controller / sample bars', 'dim', jevW - 4);
   vertical(cx, jevY + jevH, branchY); particle(vpoints(cx, jevY + jevH, branchY), 'blue', 2);
-  if (large) centerText(rightX, branchY - 1, rightW, 'spawn agents / synthetic fixtures', 'base');
+  if (large) centerText(rightX, branchY - 1, rightW, live ? 'role map / inactive slots are not running' : 'spawn agents / synthetic fixtures', 'base');
   const gap = 2, cardW = Math.floor((rightW - 2 * gap) / 3);
   const agents = ['worker', 'explorer', 'researcher'];
   const cardXs = agents.map((_, i) => rightX + i * (cardW + gap));
@@ -226,29 +229,29 @@ export function renderFrame(state, options = {}) {
     centerText(x + 1, agentY + 1, cardW - 2, roleId, 'white');
     centerText(x + 1, agentY + 2, cardW - 2, role?.model || '', 'blue');
     if (large) {
-      centerText(x + 1, agentY + 3, cardW - 2, ['patch proposal', 'reads fixture', 'test ideas'][i], 'base');
+      centerText(x + 1, agentY + 3, cardW - 2, live ? i === 0 ? live.workerAction : 'NOT ENABLED' : ['patch proposal', 'reads fixture', 'test ideas'][i], 'base');
       centerText(x + 1, agentY + 5, cardW - 2, shortStatus(thread?.status || role?.status), statusColor(thread?.status || role?.status));
     } else centerText(x + 1, agentY + 3, cardW - 2, `${shortStatus(thread?.status || role?.status)} / ${['patch', 'read', 'ideas'][i]}`, statusColor(thread?.status || role?.status));
-    if (large) centerText(x + 1, agentY + 4, cardW - 2, 'DEMO / no tools', 'dim');
+    if (large) centerText(x + 1, agentY + 4, cardW - 2, live ? i === 0 ? 'CLI reported' : 'reference slot' : 'DEMO / no tools', 'dim');
     vertical(centers[i], agentY + agentH, mergeY); particle(vpoints(centers[i], agentY + agentH, mergeY), 'base', i + 1);
   });
   horizontal(centers[0], centers[2], mergeY); particle(hpoints(centers[0], centers[2], mergeY), 'base', 5);
   vertical(cx, mergeY, reviewY - 1); put(cx, reviewY - 1, glyph.down, 'cyan');
   box(reviewX, reviewY, reviewW, 4, 'cyan');
-  centerText(reviewX + 1, reviewY + 1, reviewW - 2, 'back to sol / review + verify', 'cyan');
-  centerText(reviewX + 1, reviewY + 2, reviewW - 2, `FIXTURE: ${shortStatus(run?.status)} / no real tests`, 'dim');
+  centerText(reviewX + 1, reviewY + 1, reviewW - 2, live ? 'back to sol / result' : 'back to sol / review + verify', 'cyan');
+  centerText(reviewX + 1, reviewY + 2, reviewW - 2, live ? live.outcomeDetail : `FIXTURE: ${shortStatus(run?.status)} / no real tests`, 'dim');
 
   const logY = h - 9;
-  box(2, logY, w - 4, 6, 'border'); put(4, logY, ' session log / synthetic ', 'dim');
+  box(2, logY, w - 4, 6, 'border'); put(4, logY, live ? ' session log / actual reports ' : ' session log / synthetic ', 'dim');
   const events = state.events.slice(Math.max(0, state.events.length - 4 - logOffset), Math.max(0, state.events.length - logOffset));
   events.forEach((event, i) => {
     put(4, logY + 1 + i, String(event.time).slice(11, 19), 'dim');
     put(14, logY + 1 + i, event.role || event.type, event.type === 'review' ? 'purple' : 'blue', 12);
     put(27, logY + 1 + i, event.message, 'base', w - 31);
   });
-  put(2, h - 2, '~/agent-tree $', 'green'); put(17, h - 2, 'npm start  [DEMO - NO MODEL CALLS]', 'base');
+  put(2, h - 2, '~/agent-tree $', 'green'); put(17, h - 2, live ? live.mode+' / '+live.status : 'npm start  [DEMO - NO MODEL CALLS]', 'base');
   put(w - 25, h - 2, `${shortStatus(run?.status)} / ${Math.floor(elapsed / 1000)}s local`, statusColor(run?.status), 23);
-  put(2, h - 1, notice || '[1/2/3] scenes [R] replay [L] loop [V] layout [UP/DOWN] log [Q] quit | flow dots: decorative', 'dim', w - 4);
+  put(2, h - 1, notice || (live ? live.goal : '[1/2/3] scenes [R] replay [L] loop [V] layout [UP/DOWN] log [Q] quit | flow dots: decorative'), 'dim', w - 4);
   let result = '\x1b[H\x1b[48;2;26;29;36m'; let color, background = false;
   for (let row = 0; row < h; row++) {
     if (row) result += `\x1b[${row + 1};1H`;
