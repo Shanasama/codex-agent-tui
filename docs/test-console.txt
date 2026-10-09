@@ -1,0 +1,45 @@
+
+> codex-control-panel@0.3.0 test
+> node --test test/*.test.js
+
+✔ child environment excludes host credentials and redirects all state (1.495672ms)
+✔ runtime path checks reject outside paths and symlinks (6.08747ms)
+✔ protocol tolerates fragmented frames, null, arrays, malformed JSON (0.616041ms)
+✔ protocol has no arbitrary shell or process RPC (0.281133ms)
+✔ all supported server approval requests fail closed (0.878832ms)
+✔ real stdio transport works against labeled protocol fixture and closes child (62.316865ms)
+✔ native subagent hierarchy and statuses map real protocol fields (2.098857ms)
+✔ duplicate failure event counts once; repeated failure pauses (0.879603ms)
+✔ private reasoning and raw command output are not projected to browser (0.613036ms)
+✔ model catalog does not imply auth or inference authorization (51.487798ms)
+✔ missing exact role model blocks workflow and never substitutes (65.140518ms)
+✔ all role stages and review gates run over fixture stdio (no inference) (102.697395ms)
+✔ repeated live-fixture worker errors escalate to architect and stay paused (121.862293ms)
+✔ malformed review JSON always blocks (0.625084ms)
+✔ demo success is explicitly synthetic and has expected gate (15.954181ms)
+✔ demo repeated-error is explicitly synthetic and has expected gate (13.247636ms)
+✔ demo approval is explicitly synthetic and has expected gate (12.575899ms)
+✔ foreign notifications cannot create browser threads (59.306688ms)
+✔ HTTP loopback capability, origin, safe routes and body validation (88.495225ms)
+✔ model mismatch fails before turn/start without substitution (65.962775ms)
+✔ approval request is denied and stops progression (63.288418ms)
+✔ new run is blocked during interrupt cleanup and late starts are interrupted (260.292328ms)
+✔ uncertain turn/start delivery stops subprocess and is never retried (165.270491ms)
+✔ TUI strips CSI, OSC, controls and bidi injection from event content (1.337246ms)
+✔ TUI width handles CJK and combining marks without terminal padding drift (1.049035ms)
+✔ TUI frame stays inside 120x40 and remains explicitly demo (34.911645ms)
+✔ TUI small terminal gives resize instructions and quit control (2.304997ms)
+✔ TUI projects controller failure/approval states without fabricated success (31.872946ms)
+✔ TUI non-TTY exits with actionable message without screen escapes (61.019853ms)
+✔ TUI never exceeds actual tiny or degenerate terminal dimensions (1.497573ms)
+✔ reference layout preserves topology, demo labels and centered width across reference/wide terminals (28.162097ms)
+✔ layout toggle and decorative flow animation do not mutate controller state (16.796723ms)
+✔ reference has Unicode/truecolor by default and explicit ASCII fallback (16.659808ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1298.293771

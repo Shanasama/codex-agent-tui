@@ -1,0 +1,15 @@
+{
+  "platform": "Linux PTY",
+  "passed": true,
+  "checks": [
+    "alternate screen",
+    "cursor hide/show",
+    "demo-only label",
+    "1/2/3/r/l/v keyboard input",
+    "scroll keys",
+    "resize 60x20 and 120x40",
+    "coalesced rq input exits 0",
+    "ICANON/ECHO restoration"
+  ],
+  "realInference": false
+}

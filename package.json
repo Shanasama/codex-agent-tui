@@ -1,0 +1,20 @@
+{
+  "name": "codex-control-panel",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "description": "Demo-first ANSI terminal interface for Codex role-workflow fixtures",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node scripts/tui.js",
+    "test": "node --test test/*.test.js",
+    "check": "node scripts/check.js",
+    "probe": "node scripts/probe.js",
+    "test:ui": "node scripts/ui-test.cjs",
+    "tui": "node scripts/tui.js",
+    "web": "node src/server.js",
+    "test:tui": "node --test test/tui.test.js"
+  }
+}

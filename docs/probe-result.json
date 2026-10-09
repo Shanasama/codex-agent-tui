@@ -1,0 +1,87 @@
+{
+  "time": "2026-10-08T14:49:06.873Z",
+  "platform": "linux",
+  "node": "v24.19.0",
+  "mode": "live",
+  "connection": {
+    "status": "connected",
+    "version": "codex-cli 0.159.2",
+    "authenticated": false,
+    "models": [
+      {
+        "id": "gpt-6.1-sol",
+        "model": "gpt-6.1-sol",
+        "displayName": "GPT-6.1-Sol"
+      },
+      {
+        "id": "gpt-6-astra",
+        "model": "gpt-6-astra",
+        "displayName": "GPT-6-Astra"
+      },
+      {
+        "id": "gpt-6-sol",
+        "model": "gpt-6-sol",
+        "displayName": "GPT-6-Sol"
+      },
+      {
+        "id": "gpt-6-luna",
+        "model": "gpt-6-luna",
+        "displayName": "GPT-6-Luna"
+      },
+      {
+        "id": "gpt-5.6-sol",
+        "model": "gpt-5.6-sol",
+        "displayName": "GPT-5.6-Sol"
+      },
+      {
+        "id": "gpt-5.6-terra",
+        "model": "gpt-5.6-terra",
+        "displayName": "GPT-5.6-Terra"
+      },
+      {
+        "id": "gpt-5.6-luna",
+        "model": "gpt-5.6-luna",
+        "displayName": "GPT-5.6-Luna"
+      },
+      {
+        "id": "gpt-5.5",
+        "model": "gpt-5.5",
+        "displayName": "GPT-5.5"
+      }
+    ],
+    "liveEnabled": false,
+    "ready": false,
+    "message": "真实 app-server 已连接；独立环境未登录。模型目录不代表账户有推理权限。"
+  },
+  "roles": [
+    {
+      "id": "explorer",
+      "name": "代码探索",
+      "model": "gpt-6-luna",
+      "available": true,
+      "status": "idle"
+    },
+    {
+      "id": "researcher",
+      "name": "资料研究",
+      "model": "gpt-6-luna",
+      "available": true,
+      "status": "idle"
+    },
+    {
+      "id": "worker",
+      "name": "执行工程师",
+      "model": "gpt-6.1-sol",
+      "available": true,
+      "status": "idle"
+    },
+    {
+      "id": "architect",
+      "name": "架构审查",
+      "model": "gpt-6-astra",
+      "available": true,
+      "status": "idle"
+    }
+  ],
+  "inferenceAttempted": false
+}

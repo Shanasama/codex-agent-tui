@@ -1,0 +1,5 @@
+
+> codex-control-panel@0.3.0 check
+> node scripts/check.js
+
+Syntax checked 14 JavaScript files. No TypeScript compilation or linting is claimed.

@@ -1,0 +1,6 @@
+# 示例，不会自动加载；独立配置不提供 OS 级隔离。
+name = "worker"
+description = "按已审查计划生成补丁建议，不宣称未运行的测试通过。"
+model = "gpt-6.1-sol"
+sandbox_mode = "read-only"
+developer_instructions = "按已审查计划生成补丁建议，不宣称未运行的测试通过。 不输出私人推理，不访问凭证。"

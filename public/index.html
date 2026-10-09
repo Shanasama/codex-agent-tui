@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b0e16">
+  <meta name="description" content="独立的 Codex 多智能体控制台原型，查看角色协作、任务树与架构师审核。">
+  <title>Codex Control · 多智能体工作台</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
+    <symbol id="i-tree" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="6" rx="1.5"/><rect x="2" y="16" width="6" height="6" rx="1.5"/><rect x="16" y="16" width="6" height="6" rx="1.5"/><path d="M12 8v4M5 16v-4h14v4"/></symbol>
+    <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M2 12h5l3-8 4 16 3-8h5"/></symbol>
+    <symbol id="i-plug" viewBox="0 0 24 24"><path d="m9 3 3 3m3-9 3 3M8 7l9 9M7 8l-3 3a5 5 0 0 0 7 7l3-3M4 20l-2 2M13 4l7 7" transform="translate(1 1)"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m9 5 11 7-11 7Z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m7 7-5 5 5 5m10-10 5 5-5 5m-3-14-4 18"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 10 5-10 5L2 8Zm-10 9 10 5 10-5M2 17l10 5 10-5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 2 8 4v6c0 5-8 10-8 10S4 17 4 12V6Z"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol>
+    <symbol id="i-terminal" viewBox="0 0 24 24"><path d="m4 5 6 7-6 7m9 0h8"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.6 14.2A9 9 0 0 1 9.8 3.4a9 9 0 1 0 10.8 10.8Z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2 2.9 6.8L22 12l-7.1 3.2L12 22l-2.9-6.8L2 12l7.1-3.2Z"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+  </defs></svg>
+  <a class="skip-link" href="#main">跳到主内容</a>
+  <aside class="sidebar">
+    <a class="brand" href="#overview" aria-label="Codex Control 首页"><span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="m9 7-7 9 7 9m14-18 7 9-7 9M19 3l-6 26"/></svg></span><span>Codex<span class="brand-light">Control</span></span></a>
+    <div class="workspace"><span class="workspace-avatar">C</span><div><strong>本地工作空间</strong><span>独立控制台 · Prototype</span></div><span class="workspace-dot"></span></div>
+    <div class="nav-label">工作台</div>
+    <nav aria-label="主导航">
+      <a class="nav-item active" href="#overview"><svg><use href="#i-grid"/></svg>总览<span class="nav-indicator"></span></a>
+      <a class="nav-item" href="#tasks"><svg><use href="#i-tree"/></svg>任务编排<span class="nav-count" id="nav-thread-count">0</span></a>
+      <a class="nav-item" href="#activity"><svg><use href="#i-pulse"/></svg>运行日志<span id="activity-dot" class="small-dot"></span></a>
+      <a class="nav-item" href="#connection"><svg><use href="#i-plug"/></svg>连接与模型</a>
+    </nav>
+    <div class="sidebar-info"><span class="eyebrow">DESIGNED FOR COLLABORATION</span><div class="mini-orbit" aria-hidden="true"><span class="orbit-node orbit-center"><svg><use href="#i-star"/></svg></span><span class="orbit-node orbit-one"></span><span class="orbit-node orbit-two"></span><span class="orbit-node orbit-three"></span></div><h3>各司其职，一起交付。</h3><p>Luna 探索，Sol 执行，<br>Astra 在关键节点把关。</p></div>
+    <div class="sidebar-bottom"><div class="local-status"><span class="status-light" id="sidebar-status-light"></span><div><strong id="sidebar-status">等待连接</strong><span id="stream-label">正在连接控制台服务</span></div></div><button class="help-button" id="help-button"><svg><use href="#i-info"/></svg>关于这个原型<span>↗</span></button><div class="sidebar-version"><span>CODEX CONTROL</span><span>v0.1</span></div></div>
+  </aside>
+  <div class="main-shell">
+    <header class="topbar"><div class="breadcrumbs"><span class="mobile-brand">Codex Control</span><span class="desktop-crumb">工作空间</span><svg class="desktop-crumb"><use href="#i-chevron"/></svg><strong class="desktop-crumb">总览</strong><span class="prototype-tag">LOCAL PROTOTYPE</span></div><div class="top-actions"><span class="mode-badge" id="mode-badge"><span></span>未连接</span><button class="button button-subtle" id="demo-top"><svg><use href="#i-play"/></svg><span>体验演示</span></button><button class="button button-connect" id="connect-button"><svg><use href="#i-plug"/></svg><span>连接 Codex</span></button></div></header>
+    <main id="main">
+      <section class="hero" id="overview"><div><div class="eyebrow hero-eyebrow"><span class="tiny-line"></span>YOUR AGENT TEAM, IN SYNC</div><h1>一个目标，一支智能团队<span>。</span></h1><p>从探索到执行，让每一步协作都清晰可见。</p></div><div class="hero-meta"><span class="soft-dot"></span>4 个专属角色<span class="hero-meta-separator">/</span>3 道审核关卡</div></section>
+      <section class="composer-panel" aria-labelledby="composer-title"><div class="composer-heading"><div class="panel-icon"><svg><use href="#i-terminal"/></svg></div><h2 id="composer-title">从一个目标开始</h2><span class="composer-scope">只读样例工作区</span></div><label for="goal" class="sr-only">描述你希望团队完成的任务</label><textarea id="goal" maxlength="2000" rows="2" placeholder="描述你的评审重点。例如：检查购物车金额计算，找出输入边界，并给出补丁与测试建议…"></textarea><div class="composer-bottom"><div class="composer-note"><svg><use href="#i-shield"/></svg><span id="composer-hint">连接并验证模型后，即可启动真实推理</span></div><div class="composer-controls"><span class="keyboard-hint" title="Ctrl 或 Command 加回车">⌘ / Ctrl ↵</span><button class="button button-primary" id="run-button" disabled>启动任务<svg><use href="#i-arrow"/></svg></button></div></div></section>
+      <div class="demo-banner" id="demo-banner" hidden><div><span class="demo-icon"><svg><use href="#i-play"/></svg></span><p><strong>你正在查看模拟演示</strong><span>所有事件与结果均为预设数据，未调用 Codex 或真实模型。</span></p></div><button class="text-button" id="exit-demo">退出演示 <span>↗</span></button></div>
+      <section class="team-section" aria-labelledby="team-title"><div class="section-heading"><h2 id="team-title">你的智能体团队</h2><span>独立上下文 · 明确分工</span></div><div class="role-grid" id="role-grid"></div></section>
+      <section class="work-grid" id="tasks"><div class="panel task-panel"><div class="panel-heading"><div><svg><use href="#i-tree"/></svg><h2>任务编排</h2><span class="count-badge" id="thread-count">0</span></div><span class="run-status" id="run-status">等待任务</span></div><div id="task-content" class="task-content"><div class="empty-state"><div class="empty-tree" aria-hidden="true"><span class="empty-node empty-root"><svg><use href="#i-terminal"/></svg></span><span class="tree-line tree-line-vertical"></span><span class="tree-line tree-line-horizontal"></span><span class="empty-node empty-child one"><svg><use href="#i-search"/></svg></span><span class="empty-node empty-child two"><svg><use href="#i-code"/></svg></span><span class="empty-node empty-child three"><svg><use href="#i-star"/></svg></span></div><h3>让复杂任务有条不紊</h3><p>启动任务后，在这里查看子任务、角色分工<br>以及每条执行线程的实时状态。</p><button class="text-button" id="empty-demo">先看看团队如何协作 <svg><use href="#i-arrow"/></svg></button></div></div><div class="task-footer"><span><span class="small-dot muted"></span><span id="run-id">尚无运行记录</span></span><button class="button button-danger" id="interrupt-button" hidden><svg><use href="#i-stop"/></svg>中断任务</button><span id="task-footer-note">线程与状态实时同步</span></div></div>
+      <div class="panel reviews-panel"><div class="panel-heading"><div><svg><use href="#i-shield"/></svg><h2>架构师审核</h2></div><span class="subtle-chip">ASTRA</span></div><p class="panel-intro">关键节点，始终有一道质量关卡。</p><div id="review-list" class="review-list"></div><div class="review-note"><svg><use href="#i-info"/></svg><p>连续错误将触发额外审核。权限请求默认拒绝并暂停，保留最近事件记录。</p></div></div></section>
+      <section class="lower-grid"><div class="panel activity-panel" id="activity"><div class="panel-heading"><div><svg><use href="#i-pulse"/></svg><h2>运行时间线</h2><span class="count-badge" id="event-count">0</span></div><span class="stream-status"><span id="stream-dot" class="small-dot"></span><span id="stream-state">连接中</span></span></div><div class="event-filters" role="group" aria-label="筛选运行日志"><button class="filter active" data-filter="all" aria-pressed="true">全部事件</button><button class="filter" data-filter="agent" aria-pressed="false">智能体</button><button class="filter" data-filter="tool" aria-pressed="false">工具调用</button><button class="filter" data-filter="review" aria-pressed="false">审核</button><button class="filter" data-filter="error" aria-pressed="false">警告</button><span class="event-order">最新优先</span></div><div class="event-list" id="event-list" aria-live="polite" aria-relevant="additions text"><div class="events-empty"><svg><use href="#i-pulse"/></svg><p>任务公开状态、工具调用与审核会在这里留下轨迹。</p><span>等待第一条运行事件</span></div></div></div>
+      <div class="panel connection-panel" id="connection"><div class="panel-heading"><div><svg><use href="#i-plug"/></svg><h2>连接与模型</h2></div><span class="small-dot muted" id="connection-dot"></span></div><div class="connection-summary"><span class="connection-label">CODEX APP SERVER</span><strong id="connection-status">尚未连接</strong><p id="connection-message">通过本地桥接服务连接 Codex，验证登录状态和模型可用性。</p></div><dl class="connection-details"><div><dt>认证状态</dt><dd id="auth-status">未检查</dd></div><div><dt>服务版本</dt><dd id="server-version">—</dd></div><div><dt>推理就绪</dt><dd id="ready-status">尚未就绪</dd></div></dl><div class="model-list" id="model-list"></div><div class="connection-footnote"><svg><use href="#i-info"/></svg><span>发现模型不代表已登录。只有认证与模型检查通过后，才可执行真实任务。</span></div><button class="api-link" id="api-button">查看接口说明<svg><use href="#i-arrow"/></svg></button></div></section>
+      <footer class="page-footer"><span><svg><use href="#i-shield"/></svg>本地桥接 · 只读建议 · 显式审核</span><span>Built for human-led collaboration.</span></footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" hidden><svg><use href="#i-info"/></svg><span id="toast-message"></span><button id="dismiss-toast" aria-label="关闭提示">×</button></div>
+  <dialog id="demo-dialog"><form method="dialog"><button class="dialog-close" aria-label="关闭演示选择"><svg><use href="#i-close"/></svg></button></form><span class="eyebrow">A SAFE PLACE TO EXPLORE</span><h2>看看团队如何协作</h2><p class="dialog-description">选择一条模拟流程。演示只播放预设事件，不会调用模型、执行命令或改动文件。</p><div class="scenario-list"><button class="scenario" data-scenario="success"><span class="scenario-icon green"><svg><use href="#i-check"/></svg></span><span><strong>完整协作流程</strong><small>探索、计划审核、执行、验收</small></span><svg><use href="#i-chevron"/></svg></button><button class="scenario" data-scenario="repeated-error"><span class="scenario-icon amber"><svg><use href="#i-pulse"/></svg></span><span><strong>连续错误与复核</strong><small>触发 Astra 复核，暂停并保留失败证据</small></span><svg><use href="#i-chevron"/></svg></button><button class="scenario" data-scenario="approval"><span class="scenario-icon violet"><svg><use href="#i-shield"/></svg></span><span><strong>权限请求与暂停</strong><small>拒绝权限请求，保留可追溯记录</small></span><svg><use href="#i-chevron"/></svg></button></div><div class="dialog-footnote">DEMO DATA ONLY · 无需 Codex 登录</div></dialog>
+  <dialog id="info-dialog"><form method="dialog"><button class="dialog-close" aria-label="关闭说明"><svg><use href="#i-close"/></svg></button></form><span class="eyebrow">CODEX CONTROL / V0.1</span><h2 id="info-title">关于这个原型</h2><div id="info-content" class="info-content"></div></dialog>
+</body>
+</html>
